@@ -1,0 +1,141 @@
+<form [formGroup]="form">
+  <mat-card class="mat-elevation-z8">
+    <div formArrayName="products">
+      <div *ngFor="let prod of productControlArray.controls; let i = index">
+        <div [formArrayName]="i">
+          <div *ngFor="let mycontrol of prod.controls; let p = index">
+            <div [formGroupName]="p" class="borderout">
+              <input
+                matInput
+                
+                placeholder="id"
+                formControlName="keys"
+                required
+              />
+              <button (click)="createRow(i)">add hyperion</button>
+
+              <div [formArrayName]="'subVals'">
+                <div *ngFor="let subval of mycontrol.controls.subVals.controls; let subValIndex= index">
+                  <div [formGroupName]="subValIndex">
+                    <div>
+                      <mat-form-field>
+                        <mat-label>Id</mat-label>
+                        <input
+                          matInput
+                          placeholder="id"
+                          formControlName="product_id"
+                          required
+                        />
+                      </mat-form-field>
+                      <mat-form-field>
+                        <mat-label>Count</mat-label>
+                        <input
+                          matInput
+                          placeholder="prod Name"
+                          formControlName="unit"
+                          required
+                        />
+                      </mat-form-field>
+                      <button (click)="createDetailRows(i, subValIndex)">
+                        add operation
+                      </button>
+                      <button (click)="removeHyperion(i,subValIndex)">rem hyp</button>
+                    </div>
+
+                    <div [formArrayName]="'details'">
+                      <div *ngFor="let det of subval.controls.details.controls; let detailsIndex= index">
+                        <div [formGroupName]="detailsIndex">
+                          <mat-form-field>
+                            <mat-label>Height</mat-label>
+                            <input
+                              matInput
+                              placeholder="height"
+                              formControlName="height"
+                              required
+                            />
+                          </mat-form-field>
+                          <mat-form-field>
+                            <mat-label>Weight</mat-label>
+                            <input
+                              matInput
+                              placeholder="weight"
+                              formControlName="weight"
+                              required
+                            />
+                          </mat-form-field>
+                          <button
+                            (click)="createValRows(i, subValIndex, detailsIndex)"
+                          >
+                            add rate
+                          </button>
+                          <button (click)="removeOperation(i,subValIndex, detailsIndex)">rem op</button>
+
+
+                          <div formArrayName="vals">
+                            <div *ngFor="let val of det.controls.vals.controls; let valIndex = index">
+                              <div [formGroupName]="valIndex">
+                                {{print(val)}}
+
+                                <mat-table class="tableDet" [dataSource]="val.value" [trackBy]="cmpare" #table>
+                                  <ng-container matColumnDef="name">
+                                    <!-- <th *matHeaderCellDef>Contact Names</th> -->
+
+                                    <td *matCellDef="let element; let ij = index;" [formGroupName]="ij">
+                                      <ng-container>
+                                        <div>
+                                          <select
+                                              class="nameInput"
+                                              formControlName="name"
+                                              (change)="valDisableChange(i,subValIndex, detailsIndex, ij)"
+                                              >
+                                              <option value="ananth5">Ananth</option>
+                                              <option value="B">B</option>
+                                            </select>
+                                        </div>
+                                      </ng-container>
+
+                                    </td>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="age">
+                                    <!-- <th *matHeaderCellDef>
+                                      Contact Age
+                                    </th> -->
+                                    <td *matCellDef="let element; let ik = index;" [formGroupName]="ik">
+                                      <ng-container>
+                                        <input
+                                          class="fg-rate-name-input"
+                                          type="text"
+                                          formControlName="age"
+                                        />
+                                        <button class="remRate" (click)="removerRate(i,subValIndex, detailsIndex, ik)">rem rate</button>
+                                      </ng-container>
+                                    </td>
+                                  </ng-container>
+
+                                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+
+                                  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                                </mat-table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="save()">
+        Save
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>
